@@ -33,9 +33,9 @@ def send_announcement(server, message):
 
 def on_player_joined(server, player, info):
     server.execute('tellraw %s [{"text":"%s ","color":"gold"},{"text":"欢迎回来喵~"}]' % (player, player))
-    if announcements.count > 0:
+    if len(announcements) > 0:
         server.execute('tellraw %s [{"text":"======= [PSS公告] ======="}]' % player)
-        time, publisher, content = announcements[announcements.count - 1]
+        time, publisher, content = announcements[len(announcements) - 1]
         server.execute('tellraw %s [{"text":"\\n%s","color":"gray"},{"text":"\\n%s","color":"gray"},{"text":"\\n"},{"text":"\\n%s"},{"text":"-----------"}]' % (player, time, publisher, content))
 
 def on_info(server, info):
