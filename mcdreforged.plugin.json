@@ -1,0 +1,13 @@
+{
+	"id": "pss_announcement",
+	"version": "1.0.0",
+	"name": "PSS_announcement",
+	"description": {
+		"en_us": "Announce players when they join the server",
+		"zh_cn": "玩家加入服务器时进行公告"
+	},
+	"author": [
+		"DreamingLri"
+	],
+	"link": "https://github.com/DreamingLri/PSS_announcement"
+}
