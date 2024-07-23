@@ -32,9 +32,12 @@ def send_announcement(server, message):
     server.execute('tellraw @a [{"text":"[%s] ","color":"gold"},{"text":"%s","color":"white"}]' % (server_name, message))
 
 def on_player_joined(server, player, info):
+    server.execute('tellraw %s [{"text":"%s ","color":"gold"},{"text":"欢迎回来喵~"}]' % (player, player))
+    server.execute('tellraw %s [{"text":"======= [PSS公告] ======="}]' % player)
     for announcement in announcements:
         time, publisher, content = announcement
-        server.execute('tellraw %s [{"text":"======= [PSS公告] =======","color":"white"},{"text":"\\n%s","color":"gray"},{"text":"\\n%s","color":"gray"},{"text":"\\n-------------","color":"white"},{"text":"\\n%s","color":"white"},{"text":"\\n-------------","color":"white"}]' % (player, time, publisher, content))
+        server.execute('tellraw %s [{"text":"\\n-------------"},{"text":"\\n%s","color":"gray"},{"text":"\\n%s","color":"gray"},{"text":"\\n"},{"text":"\\n%s"}]' % (player, time, publisher, content))
+    server.execute('tellraw %s [{"text":"\\n-------------"}]' % player)
 
 def on_info(server, info):
     if info.content.startswith('!!p add '):
