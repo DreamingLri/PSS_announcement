@@ -62,5 +62,7 @@ def on_info(server, info):
         server.reply(info, '[%s公告列表]\n§a' % server_name + announcements_list)
 
     elif info.content.startswith('!!p help'):
-        server.reply(info, '----- PSS Announcement -----\n简易公告栏\n使用 !!p add <公告内容> 发布一个公告\n§e使用 !!p delete <序号> 删除公告\n§e使用 !!p list 显示所有公告\n')
+        server.reply(info, '----- PSS Announcement -----\n简易公告栏\n§e!!p add <公告内容> 发布一个公告\n§e!!p delete <序号> 删除公告\n§e!!p list 显示所有公告\n')
 
+    elif info.content.startswith('!!p'):
+        server.reply(info, '§e!!p add <公告内容> 发布一个公告\n§e!!p delete <序号> 删除公告\n§e!!p list 显示所有公告\n')
