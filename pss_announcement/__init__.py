@@ -29,7 +29,7 @@ def save_announcements():
         json.dump({'announcements': announcements, 'server_name': server_name}, file, indent=4, ensure_ascii=False)
 
 def send_announcement(server, message):
-    server.execute('tellraw @a [{"text":"[%s] ","color":"gold"},{"text":"%s","color":"%s"}]' % (server_name, message))
+    server.execute('tellraw @a [{"text":"[%s] ","color":"gold"},{"text":"%s","color":"white"}]' % (server_name, message))
 
 def on_player_joined(server, player, info):
     for announcement in announcements:
@@ -45,15 +45,15 @@ def on_info(server, info):
         save_announcements()
         send_announcement(server, '%s公告已发布：%s' % (server_name, content))
 
-    elif info.content.startswith('!!p delete'):
+    elif info.content.startswith('!!p delete '):
         try:
-            index = int(info.content[5:]) - 1
+            index = int(info.content[11:]) - 1
             if index < 0 or index >= len(announcements):
                 server.reply(info, '§c序号不存在！')
                 return
             del announcements[index]
             save_announcements()
-            send_announcement(server, '已删除公告', "green")
+            send_announcement(server, '已删除公告 %s' % (index + 1))
         except ValueError:
             server.reply(info, '§c请输入§a正确§c的序号！')
 
