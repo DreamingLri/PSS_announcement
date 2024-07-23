@@ -34,7 +34,7 @@ def send_announcement(server, message):
 def on_player_joined(server, player, info):
     for announcement in announcements:
         time, publisher, content = announcement
-        server.execute('tellraw %s [{"text":"======= [PSS公告] =======","color":"white"},{"text":"\\n%s","color":"gray"},{"text":"\\n%s","color":"gray"},{"text":"\\n"-------------,"color":"white"},{"text":"%s","color":"white"},{"text":"\\n-------------","color":"white"}]' % (player, time, publisher, content))
+        server.execute('tellraw %s [{"text":"======= [PSS公告] =======","color":"white"},{"text":"\\n%s","color":"gray"},{"text":"\\n%s","color":"gray"},{"text":"\\n-------------","color":"white"},{"text":"\\n%s","color":"white"},{"text":"\\n-------------","color":"white"}]' % (player, time, publisher, content))
 
 def on_info(server, info):
     if info.content.startswith('!!p add '):
