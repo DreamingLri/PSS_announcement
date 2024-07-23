@@ -1,5 +1,5 @@
 import json
-import datetime
+from datetime import datetime
 from mcdreforged.api.all import *
 
 announcements = []
