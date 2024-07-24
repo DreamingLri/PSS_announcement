@@ -36,12 +36,14 @@ def on_player_joined(server, player, info):
     if len(announcements) > 0:
         server.execute('tellraw %s [{"text":"======= [PSS公告] ======="}]' % player)
         time, publisher, content = announcements[len(announcements) - 1]
-        server.execute('tellraw %s [{"text":"\\n%s","color":"gray"},{"text":"\\n%s","color":"gray"},{"text":"\\n"},{"text":"\\n%s"},{"text":"-----------"}]' % (player, time, publisher, content))
+        server.execute('tellraw %s [{"text":"\\n%s","color":"gray"},{"text":"\\n%s","color":"gray"},{"text":"\\n"},{"text":"\\n%s"},{"text":"\\n-----------"},{"color":"white"}]' % (player, time, publisher, content))
 
 def on_info(server, info):
     if info.content.startswith('!!p add '):
         content = info.content[8:]
         publisher = info.player
+        if "SBLB" in content or "sblb" in content:
+            publisher = "***"
         time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         announcements.append((time, publisher, content))
         save_announcements()
