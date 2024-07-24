@@ -6,13 +6,6 @@ announcements = []
 announcements_file = 'config/pss_announcement.json'
 server_name = 'PSS'
 
-def on_load(server, old_module):
-    load_announcements()
-    server.register_help_message('!!p add <公告内容>', '写一个公告')
-    server.register_help_message('!!p delate <序号>', '删除指定序号的公告')
-    server.register_help_message('!!p list', '显示当前所有的公告信息')
-    server.register_help_message('!!p help', '获取插件的使用教程和所有的命令')
-
 def load_announcements():
     global announcements, server_name
     try:
@@ -38,9 +31,9 @@ def on_player_joined(server, player, info):
         time, publisher, content = announcements[len(announcements) - 1]
         server.execute('tellraw %s [{"text":"\\n%s","color":"gray"},{"text":"\\n%s","color":"gray"},{"text":"\\n"},{"text":"\\n%s"},{"text":"\\n-----------"},{"color":"white"}]' % (player, time, publisher, content))
 
-def on_info(server, info):
-    if info.content.startswith('!!p add '):
-        content = info.content[8:]
+def add_announcement(server, context, info):
+    if content.startswith('!!p add '):
+        content = context['text']
         publisher = info.player
         if "SBLB" in content or "sblb" in content:
             publisher = "***"
@@ -49,9 +42,9 @@ def on_info(server, info):
         save_announcements()
         send_announcement(server, '%s公告已发布：%s' % (server_name, content))
 
-    elif info.content.startswith('!!p delete '):
+def del_announcement(server, context, info):
         try:
-            index = int(info.content[11:]) - 1
+            index = int(context['index']) - 1
             if index < 0 or index >= len(announcements):
                 server.reply(info, '§c序号不存在！')
                 return
@@ -61,12 +54,34 @@ def on_info(server, info):
         except ValueError:
             server.reply(info, '§c请输入§a正确§c的序号！')
 
-    elif info.content.startswith('!!p list'):
+def list_announcement(server, context, info):
         announcements_list = '\n'.join([f'{i+1}: {announcement[2]}' for i, announcement in enumerate(announcements)])
         server.reply(info, '[%s公告列表]\n§a' % server_name + announcements_list)
 
-    elif info.content.startswith('!!p help'):
-        server.reply(info, '----- PSS Announcement -----\n简易公告栏\n§e!!p add <公告内容> 发布一个公告\n§e!!p delete <序号> 删除公告\n§e!!p list 显示所有公告\n')
+def show_help_info(context: PlayerCommandSource):
+    server = context.get_server()
+    info = context.get_info()
+    server.reply(info, "-------- §a Welcome Message §r--------")
+    server.reply(info, RText("§7!!pa help§r").set_hover_text("点击以填入" + " §7!!pa help§r").set_click_event(RAction.suggest_command, "!!pa help") + ' ' + "展示帮助信息")
+    server.reply(info, RText("§7!!pa add <text>§r").set_hover_text("点击以填入" + " §7!!pa add§r").set_click_event(RAction.suggest_command, "!!pa add ") + ' ' + "添加一条公告")
+    server.reply(info, RText("§7!!pa del <index>§r").set_hover_text("点击以填入" + " §7!!pa del§r").set_click_event(RAction.suggest_command, "!!pa delete") + ' ' + "删除指定序号的公告")
+    server.reply(info, RText("§7!!pa list [index]§r").set_hover_text("点击以填入" + " §7!!pa list§r").set_click_event(RAction.suggest_command, "!!pa list") + ' ' + "显示所有公告")
+    server.reply(info, "------------------------------------")
 
-    elif info.content.startswith('!!p'):
-        server.reply(info, '§e!!p add <公告内容> 发布一个公告\n§e!!p delete <序号> 删除公告\n§e!!p list 显示所有公告\n')
+
+def on_load(server: PluginServerInterface, old):
+
+    load_announcements()
+    server.register_help_message('!!pa', "PSS 公告")
+
+    command_builder = SimpleCommandBuilder()
+    command_builder.command('!!pa list', list_announcement)
+    command_builder.command('!!pa list <index>', load_announcements)
+    command_builder.command('!!pa add <text>', add_announcement)
+    command_builder.command('!!pa del <index>', del_announcement)
+    command_builder.command('!!pa', show_help_info)
+    command_builder.command('!!pa help', show_help_info)
+    command_builder.arg('text', Text)
+    command_builder.arg('index', Integer)
+
+    command_builder.register(server)
